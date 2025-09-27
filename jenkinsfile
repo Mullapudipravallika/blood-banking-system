@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/Mullapudipravallika/blood-banking-system.git'
+            }
+        }
+
+        stage('Frontend Build') {
+            steps {
+                dir('frontend') {
+                    bat 'npm install'
+                    bat 'npm run build'
+                }
+            }
+        }
+
+        stage('Backend Build') {
+            steps {
+                dir('backend') {
+                    bat 'mvn clean install'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo '🚀 Deploying application...'
+                // Example: bat 'docker-compose up -d'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Pipeline completed successfully."
+        }
+        failure {
+            echo "❌ Pipeline failed."
+        }
+    }
+}
